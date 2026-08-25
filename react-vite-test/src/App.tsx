@@ -1,122 +1,77 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react'
 
-function App() {
+function ReviewTest() {
   const [count, setCount] = useState(0)
+  const [username, setUsername] = useState('')
+
+  // ISSUE 1:
+  // Interval is created but never cleaned up.
+  useEffect(() => {
+    const timer = setInterval(() => {
+      console.log('Polling...')
+    }, 1000)
+  }, [])
+console.log('test hahahahha')
+  // ISSUE 2:
+  // Effect uses count but dependency array is empty.
+  useEffect(() => {
+    console.log('Current count:', count)
+  }, [])
+
+  // ISSUE 3:
+  // Hardcoded secret.
+  const apiKey = 'sk_test_123456789_super_secret_key'
+
+  // ISSUE 4:
+  // Direct DOM manipulation in React.
+  const updateMessage = () => {
+    const element = document.getElementById('review-message')
+
+    if (element) {
+      element.innerHTML = username
+    }
+  }
+
+  // ISSUE 5:
+  // Fetch response/error handling is missing.
+  const loadUsers = async () => {
+    const response = await fetch(
+      'https://jsonplaceholder.typicode.com/users'
+    )
+
+    const users = await response.json()
+    console.log(users)
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div>
+      <h1>PR Reviewer Test</h1>
 
-      <div className="ticks"></div>
+      <p>Count: {count}</p>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      <button onClick={() => setCount(count + 1)}>
+        Increase
+      </button>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      <input
+        value={username}
+        onChange={(event) => setUsername(event.target.value)}
+        placeholder="Enter name"
+      />
+
+      <button onClick={updateMessage}>
+        Update Message
+      </button>
+
+      <button onClick={loadUsers}>
+        Load Users
+      </button>
+
+      <div id="review-message" />
+
+      <p>{apiKey}</p>
+    </div>
   )
 }
 
-export default App
+export default ReviewTest
